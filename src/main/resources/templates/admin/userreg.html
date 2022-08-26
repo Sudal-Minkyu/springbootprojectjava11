@@ -1,0 +1,54 @@
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        $(function(){
+            console.log("제이쿼리 테스트");
+        });
+
+        function userreg(){
+            console.log("사용자등록");
+
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $(document).ajaxSend(function (e, xhr) {xhr.setRequestHeader(header, token);});
+
+            const formData = new FormData(document.getElementById('userreg'));
+
+            $.ajax({
+                url : '/api/account/userreg',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                cache: false,
+                error: function (request) {
+                    if (request.status === "403") {
+                        alert("로그인 정보가 만료되었거나, <BR>권한이 없습니다. <BR>다시 로그인 하세요.");
+                    } else {
+                        alert("데이터 문제가 생겼습니다.");
+                    }
+                },
+                success: function (res) {
+                    console.log("사용자등록 완료");
+                }
+            });
+        }
+    </script>
+</th:block>
+
+<div layout:fragment="content" class="content">
+  <form id="userreg" enctype="multipart/form-data">
+      <h1 >사용자 등록</h1>
+      <input type="text" title="아이디 입력" placeholder="아이디" name="userId">
+      <input type="text" title="이름 입력" placeholder="이름" name="userName">
+      <input type="password" title="비밀번호 입력" placeholder="비밀번호" name="userPw">
+      <button type="button" onclick="userreg()">사용자등록</button>
+  </form>
+</div>
+
+</html>
