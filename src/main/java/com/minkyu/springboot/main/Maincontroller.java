@@ -1,7 +1,7 @@
 //package com.minkyu.springboot.main;
 //
-//import com.minkyu.springboot.account.Account;
-//import com.minkyu.springboot.account.AccountService;
+//import com.broadwave.ecodeltacity.account.AccountService;
+//import com.broadwave.ecodeltacity.account.accountdtos.AccountReponse;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
@@ -9,7 +9,6 @@
 //
 //import javax.servlet.http.HttpServletRequest;
 //import javax.servlet.http.HttpSession;
-//import java.util.Optional;
 //
 ///**
 // * @author Minkyu
@@ -29,7 +28,7 @@
 //    }
 //
 //    //메인화면
-//    @RequestMapping(value={"/", "main"})
+//    @RequestMapping(value = {"/", "/main"})
 //    public String main(){
 //        return "main";
 //    }
@@ -41,14 +40,13 @@
 //        //Security 로그인정보가져와서 세션에 저장
 //        HttpSession session = request.getSession();
 //
-//        Optional<Account> optionalAccount = accountService.findByUserId(request.getUserPrincipal().getName());
-//        if (optionalAccount.isPresent()) {
-//            Account account = optionalAccount.get();
+//        AccountReponse accountReponse = accountService.findByUserId(request.getUserPrincipal().getName());
+//        if (accountReponse != null) {
 //
 //            //userid 세션저장
-//            session.setAttribute("userId", account.getUserId());
-//            session.setAttribute("userName", account.getUserName());
-//            session.setAttribute("role", account.getRole().getCode());
+//            session.setAttribute("userId", accountReponse.getUserId());
+//            session.setAttribute("userName", accountReponse.getUserName());
+//            session.setAttribute("role", accountReponse.getRole().getCode());
 //
 //            log.info("로그인 아이디 : "+session.getAttribute("userId"));
 //            log.info("사용자명 : "+session.getAttribute("userName"));
@@ -60,10 +58,11 @@
 //
 //    // 로그인 api
 //    @RequestMapping("/login")
-//    public String login(HttpServletRequest request){
+//    public String login(HttpServletRequest request) {
 //        String referrer = request.getHeader("Referer");
 //        request.getSession().setAttribute("prevPage", referrer);
 //        return "login";
 //    }
 //
 //}
+

@@ -1,20 +1,17 @@
 //package com.minkyu.springboot.account;
 //
-//import com.minkyu.springboot.common.AjaxResponse;
-//import com.minkyu.springboot.common.ResponseErrorCode;
+//import com.broadwave.ecodeltacity.account.accountdtos.AccountMapperDto;
+//import io.swagger.annotations.ApiImplicitParam;
+//import io.swagger.annotations.ApiImplicitParams;
+//import io.swagger.annotations.ApiOperation;
 //import lombok.extern.slf4j.Slf4j;
-//import org.modelmapper.ModelMapper;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.ModelAttribute;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.bind.annotation.*;
 //
 //import javax.servlet.http.HttpServletRequest;
-//import java.time.LocalDateTime;
+//import javax.validation.Valid;
 //import java.util.Map;
-//import java.util.Optional;
 //
 ///**
 // * @author Minkyu
@@ -27,47 +24,25 @@
 //@RequestMapping("/api/account")
 //public class AccountRestController {
 //
-//    private final ModelMapper modelMapper;
 //    private final AccountService accountService;
 //
 //    @Autowired
-//    public AccountRestController(AccountService accountService, ModelMapper modelMapper) {
+//    public AccountRestController(AccountService accountService) {
 //        this.accountService = accountService;
-//        this.modelMapper = modelMapper;
 //    }
 //
-//    @PostMapping("reg")
-//    public ResponseEntity<Map<String,Object>> accountSave(@ModelAttribute AccountMapperDto accountMapperDto, HttpServletRequest request){
+//    @ApiOperation(value = "사용자등록", notes = "관리자가 사용자를 등록한다.")
+//    @ApiImplicitParams({@ApiImplicitParam(name="insert_id", value = "insert_id", required = true, dataType = "string", paramType = "header")})
+//    @PostMapping("/accountSave")
+//    public ResponseEntity<Map<String,Object>> save(@RequestBody @Valid AccountMapperDto accountMapperDto, HttpServletRequest request){
+//        return accountService.accountSave(accountMapperDto, request);
+//    }
 //
-//        AjaxResponse res = new AjaxResponse();
-//
-//        Account account = modelMapper.map(accountMapperDto, Account.class);
-//
-//        //패스워드를 입력하세요.
-//        if (accountMapperDto.getUserPw() == null || accountMapperDto.getUserPw().equals("")){
-//            return ResponseEntity.ok(res.fail(ResponseErrorCode.ECO001.getCode(), "비밀번호를 "+ ResponseErrorCode.ECO001.getDesc(), null, null));
-//        }
-//
-//        Optional<Account> optionalAccount = accountService.findByUserId(account.getUserId());
-//
-//        String userId = request.getUserPrincipal().getName();
-//        log.info("로그인한 ID : "+userId);
-//
-//        //userid 중복체크
-//        if (optionalAccount.isPresent()) {
-//            log.info("사용자아이디중복 - 사용자아이디: '" + account.getUserId() + "'");
-//            return ResponseEntity.ok(res.fail(ResponseErrorCode.ECO002.getCode(), "해당 아이디는 "+ResponseErrorCode.ECO002.getDesc(),null, null));
-//        }else{
-//            account.setInsert_id(userId);
-//            account.setInsert_date(LocalDateTime.now());
-//        }
-//
-//
-////        Account accountSave =  accountService.save(account);
-//
-////        log.info("사용자 저장 성공 : '" + accountSave.getUserId() +"'" );
-//        return ResponseEntity.ok(res.success());
-//
+//    @ApiOperation(value = "사용자 아이디 중복체크", notes = "아이디 중복체크를 한다.")
+//    @ApiImplicitParams({@ApiImplicitParam(name="insert_id", value = "insert_id", required = true, dataType = "string", paramType = "header")})
+//    @GetMapping("/saveOverlap")
+//    public ResponseEntity<Map<String,Object>> saveOverlap(@RequestParam("userId") String userId){
+//        return accountService.saveOverlap(userId);
 //    }
 //
 //}

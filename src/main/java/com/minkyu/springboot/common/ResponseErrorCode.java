@@ -7,8 +7,8 @@ package com.minkyu.springboot.common;
  * Remark : RestController 응답코드
  */
 public enum ResponseErrorCode {
-    ECO001("ECO001", "입력해주세요."),
-    ECO002("ECO002", "사용중입니다.."),
+    CODE001("CODE001", "입력해주세요."),
+    CODE002("CODE002", "사용중입니다.."),
 
 
     ;

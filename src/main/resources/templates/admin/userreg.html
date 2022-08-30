@@ -1,7 +1,7 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layout/default">
+      layout:decorate ="~{/layout/default}">
 
 <th:block layout:fragment="script">
     <script type="text/javascript">
@@ -9,46 +9,103 @@
             console.log("제이쿼리 테스트");
         });
 
-        function userreg(){
+        function accountSave(){
             console.log("사용자등록");
+
+            if($("#orerlap").val() !== "1"){
+                alert("아이디 중복체크를 해주세요.");
+                return false;
+            }
 
             const token = $("meta[name='_csrf']").attr("content");
             const header = $("meta[name='_csrf_header']").attr("content");
-            $(document).ajaxSend(function (e, xhr) {xhr.setRequestHeader(header, token);});
 
-            const formData = new FormData(document.getElementById('userreg'));
+            const params = {
+                userId : $("#userId").val(),
+                userPw : $("#userPw").val(),
+                userName : $("#userName").val(),
+                userPhone : $("#userPhone").val(),
+            }
 
             $.ajax({
-                url : '/api/account/userreg',
+                url : '/api/account/accountSave',
                 type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                enctype: 'multipart/form-data',
+                data: JSON.stringify(params),
+                contentType: "application/json; charset=utf-8",
                 cache: false,
-                error: function (request) {
-                    if (request.status === "403") {
-                        alert("로그인 정보가 만료되었거나, <BR>권한이 없습니다. <BR>다시 로그인 하세요.");
-                    } else {
-                        alert("데이터 문제가 생겼습니다.");
-                    }
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(header, token);
                 },
-                success: function (res) {
-                    console.log("사용자등록 완료");
+                error: function (response) {
+                    console.log(response.status);
+                },
+                success: function (request) {
+                    if(request.status === 200){
+                        alert("사용자등록 완료");
+                    }
+                    else {
+                        if (request.err_msg2 === null) {
+                            alert(request.err_msg);
+                        } else {
+                            alert(request.err_msg + "<br>" + request.err_msg2);
+                        }
+                    }
                 }
             });
         }
+
+        function saveOverlap(){
+            console.log("사용자아이디 중복체크");
+
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+
+            const params = {
+                userId : $("#userId").val(),
+            }
+
+            $.ajax({
+                url : '/api/account/saveOverlap',
+                type: 'GET',
+                data: params,
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function (response) {
+                    console.log(response.status);
+                },
+                success: function (request) {
+                    const $orerlap = $("#orerlap");
+                    if(request.status === 200){
+                        alert("중복체크 완료");
+                        $orerlap.val("1");
+                    }
+                    else {
+                        $orerlap.val("0");
+                        if (request.err_msg2 === null) {
+                            alert(request.err_msg);
+                        } else {
+                            alert(request.err_msg + "<br>" + request.err_msg2);
+                        }
+                    }
+                }
+            });
+        }
+
     </script>
 </th:block>
 
 <div layout:fragment="content" class="content">
-  <form id="userreg" enctype="multipart/form-data">
-      <h1 >사용자 등록</h1>
-      <input type="text" title="아이디 입력" placeholder="아이디" name="userId">
-      <input type="text" title="이름 입력" placeholder="이름" name="userName">
-      <input type="password" title="비밀번호 입력" placeholder="비밀번호" name="userPw">
-      <button type="button" onclick="userreg()">사용자등록</button>
-  </form>
+    <h1 >사용자 등록</h1>
+    <input type="hidden" id="orerlap">
+    <input type="text" value="" placeholder="아이디" id="userId">
+    <button type="button" onclick="saveOverlap()">ID중복체크</button>
+    <input type="text" value="" placeholder="이름" id="userName">
+    <input type="password" value="" placeholder="비밀번호" id="userPw">
+    <input type="text" value="" placeholder="폰번호" id="userPhone">
+    <button type="button" onclick="accountSave()">사용자등록</button>
 </div>
 
 </html>

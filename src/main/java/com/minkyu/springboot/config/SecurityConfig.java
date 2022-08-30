@@ -5,6 +5,7 @@
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.config.annotation.web.builders.WebSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 //import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 //import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -21,14 +22,24 @@
 //public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //    @Override
+//    public void configure(WebSecurity web) {
+//        web.ignoring().antMatchers("/favicon.ico","/swagger*/**","/v2/api-docs","/webjars/**");
+//    }
+//
+//    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http
-////                .csrf().disable() // csrf 인증을 하기위해 적용
+////                .csrf().disable() // csrf 보안 설정
+////                .httpBasic().disable() // rest api 만을 고려
+//
+//                // 스프링에서 '로그인하지 않은 사용자'가 아닌 '익명 사용자'로 판단하기 때문에 Forbidden이 발생
+////                .anonymous().disable() // // anonymous를 off시켜야 Unauthorize Exception이 잘 작동한다.
+//
 //                .authorizeRequests()
-////                ,"/assets/img/**"
-//                .antMatchers("/","/js/**","/css/**","/login","/logout","/img/favicon.ico").permitAll()
+//
+//                .antMatchers("/js/**","/css/**","/login","/logout","/error").permitAll()
 //                .antMatchers("/admin/**","/api/account/**").hasRole("ADMIN")
-//                .antMatchers("/franchise/**").hasAnyRole("ADMIN","USER")
+//                .antMatchers("/user/**").hasAnyRole("ADMIN","USER")
 //                .anyRequest()
 //                .authenticated()
 //

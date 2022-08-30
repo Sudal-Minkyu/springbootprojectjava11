@@ -1,8 +1,9 @@
 //package com.minkyu.springboot.config;
 //
-//import com.minkyu.springboot.account.Account;
-//import com.minkyu.springboot.account.AccountService;
-//import com.minkyu.springboot.account.accountdtos.AccountRole;
+//import com.broadwave.ecodeltacity.account.Account;
+//import com.broadwave.ecodeltacity.account.AccountService;
+//import com.broadwave.ecodeltacity.account.accountdtos.AccountReponse;
+//import com.broadwave.ecodeltacity.account.accountdtos.AccountRole;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.boot.ApplicationArguments;
@@ -10,7 +11,6 @@
 //import org.springframework.stereotype.Component;
 //
 //import java.time.LocalDateTime;
-//import java.util.Optional;
 //
 ///**
 // * @author Minkyu
@@ -32,14 +32,15 @@
 //                .userId("admin")
 //                .userName("관리자")
 //                .userPw("123789")
+//                .userPhone("01012345678")
 //                .role(AccountRole.ROLE_ADMIN)
 //                .insert_id("system")
 //                .insert_date(LocalDateTime.now())
 //                .build();
-//        log.info("saveAccount : " + saveAccount);
+////        log.info("saveAccount : " + saveAccount);
 //
-//        Optional<Account> optionalAccount = accountService.findByUserId(saveAccount.getUserId());
-//        if (optionalAccount.isPresent()) {
+//        AccountReponse accountReponse = accountService.findByUserId(saveAccount.getUserId());
+//        if (accountReponse != null) {
 //            log.info("이미 존재하는 계정");
 //        } else {
 //            accountService.save(saveAccount);
